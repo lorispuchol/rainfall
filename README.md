@@ -1,13 +1,83 @@
-# rainfall
+# Rainfall
 
-Connection to the Rainfall VM (iso provided by the subject):
+Rainfall is an iso challenge slightly more complex than SnowCrash. We will have to dive deep into reverse engineering, learn to reconstruct a code, and understand it to detect faults.
 
+## General instructions
+#### Connection to the Rainfall VM (iso provided by the subject):
 `user: level0`
 `password: level0`
+#### get CPU info:
+```bash
+lscpu
+cat /proc/cpuinfo
+```
 
-Get security informations:
+#### Goal
+Find a way to read the `.pass` file with the `levelX` user account of the next level (X = number of the next level). This `.pass` file is located at the home directory of each (level0 excluded) user: `/home/user/levelX/.pass`.
 
+## Display kernel protection informations:
 ```bash
 checksec --kernel
+sysctl kernel.randomize_va_space
+cat /proc/sys/kernel/randomize_va_space
+```
+
+Output (given at login):
+
+```console
+  GCC stack protector support:            Enabled
+  Strict user copy checks:                Disabled
+  Restrict /dev/mem access:               Enabled
+  Restrict /dev/kmem access:              Enabled
+  grsecurity / PaX: No GRKERNSEC
+  Kernel Heap Hardening: No KERNHEAP
+ System-wide ASLR (kernel.randomize_va_space): Off (Setting: 0)
+```
+
+## Display elf binary protection informations:
+```bash
 checksec --dir .
 ```
+
+Output (given at login for `level0`):
+
+```console
+RELRO           STACK CANARY      NX            PIE             RPATH      RUNPATH      FILE
+No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RUNPATH   level0
+```
+
+- RELRO (RELocation Read-Only) marks the GOT (Global Offset Table) as read-only, preventing an attacker from overwriting function pointers.
+> GOT 
+> - Partial RELRO: The GOT is read-only, but the dynamic linker's symbol table is not.
+> - Full RELRO: Both the GOT and the dynamic linker's symbol table are read-only.
+
+- Canaries helps prevent buffer overflow attacks. They are values placed on the stack that are checked before a function returns to ensure that they have not been modified by a buffer overflow.
+- NX (No eXecute) marks certain areas of memory as non-executable.
+- PIE (Position Independent Executable) means the program can load dependencies at different memory locations each time it's executed, preventing hardcoded addresses (But the offsets between parts of the program remain the same - relative addresses).
+- RPATH and RUNPATH are used to specify the directories in which the dynamic linker should search for shared libraries. (Set to for standard locations)
+
+> See ROP - Return Oriented Programing >> Ret2Libc
+
+## Tools for Working with ELF Files
+
+- `readelf`: Displays information about ELF files, including headers, sections, and segments.
+- `objdump`: Provides detailed information about object files, including disassembly of executable code.
+- `nm`: Lists symbols from object files.
+- `ldd`: Prints shared library dependencies of an ELF executable.
+- `strace`: Tracks system calls and signals.
+- `ltrace`: Tracks library calls.
+- `gdb`: The GNU Debugger.
+- `checksec`: A script to check the security properties of an ELF binary.
+- `strings`: Prints the printable strings in an object file.
+- `file`: Determines the type of an object file.
+- `hexdump`: Displays the contents of an object file in hexadecimal format.
+- `xxd`: A hexdump utility that can output hexdumps in a variety of formats.
+
+
+
+### References
+- <https://en.wikipedia.org/wiki/.bss>
+- <https://en.wikipedia.org/wiki/Global_Offset_Table>
+- <https://opensource.com/article/21/6/linux-checksec>
+- <https://ctf101.org/binary-exploitation/overview/>
+- <https://book.hacktricks.xyz/binary-exploitation/basic-stack-binary-exploitation-methodology>
