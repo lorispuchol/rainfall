@@ -34,6 +34,14 @@ Output (given at login):
  System-wide ASLR (kernel.randomize_va_space): Off (Setting: 0)
 ```
 
+- Stack protector: Protects against stack buffer overflows (work by placing a canary)
+- User copy checks: Protects against user-space memory corruption (prevent copying data between user-space and kernel-space)
+- Restrict /dev/mem access: Prevents direct access to physical memory
+- Restrict /dev/kmem access: Prevents direct access to kernel memory
+- PaX (Patchset for X): Is an extensive security enhancement to the Linux kernel that defends against memory corruption-based exploit and other.
+- Kernel Heap Hardening: Protects against heap corruption
+- ASLR (Address Space Layout Randomization): Randomizes the memory addresses of the stack, heap, and libraries to make it harder for attackers to predict the location of code or data in memory.
+
 ## Display elf binary protection informations:
 ```bash
 checksec --dir .
@@ -47,16 +55,17 @@ No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RU
 ```
 
 - RELRO (RELocation Read-Only) marks the GOT (Global Offset Table) as read-only, preventing an attacker from overwriting function pointers.
-> GOT 
-> - Partial RELRO: The GOT is read-only, but the dynamic linker's symbol table is not.
-> - Full RELRO: Both the GOT and the dynamic linker's symbol table are read-only.
+  > - No RELRO: The GOT is not read-only.
+  > - Partial RELRO: The GOT is read-only, but the dynamic linker's symbol table is not.
+  > - Full RELRO: Both the GOT and the dynamic linker's symbol table are read-only.
+
+  > The GOT is a table of pointers that point to functions or variables in shared libraries. It is used to resolve addresses of functions or variables at runtime.
 
 - Canaries helps prevent buffer overflow attacks. They are values placed on the stack that are checked before a function returns to ensure that they have not been modified by a buffer overflow.
 - NX (No eXecute) marks certain areas of memory as non-executable.
 - PIE (Position Independent Executable) means the program can load dependencies at different memory locations each time it's executed, preventing hardcoded addresses (But the offsets between parts of the program remain the same - relative addresses).
 - RPATH and RUNPATH are used to specify the directories in which the dynamic linker should search for shared libraries. (Set to for standard locations)
 
-> See ROP - Return Oriented Programing >> Ret2Libc
 
 ## Tools for Working with ELF Files
 
@@ -73,6 +82,9 @@ No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RU
 - `hexdump`: Displays the contents of an object file in hexadecimal format.
 - `xxd`: A hexdump utility that can output hexdumps in a variety of formats.
 
+
+### Hints:
+  > __See ROP (Return Oriented Programing) sush as Ret2Libc__
 
 
 ### References
