@@ -1,29 +1,40 @@
 #include <stdio.h>
-#include <unistd.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 #include <sys/types.h>
 
-int		main(int ac, char **av)
-{
-	int		nb;
-	char	*cmd_args[2];
-	gid_t	gid;
-	uid_t	uid;
-	
-	nb = atoi(av[1]);
-	if (nb != 423)
-		fwrite("No !\n", 5, 1, stderr);
-	else
-	{
-		cmd_args[0] = strdup("/bin/sh");
-		cmd_args[1] = NULL;
+int main(int argc, char *argv[]) {
+    int inputValue;
+    char *shellPath;
+    uid_t effectiveUserId;
+    gid_t effectiveGroupId;
 
-		gid = getegid();
-		uid = geteuid();
-		setresgid(gid, gid, gid);
-		setresuid(uid, uid, uid);
+    // Convert the second command-line argument to an integer
+    inputValue = atoi(argv[1]);
 
-		execv("/bin/sh", cmd_args);
-	}
-	return (0);
+    // Check if the integer is equal to 0x1a7 (423 in decimal)
+    if (inputValue == 423) { // 0x1a7
+        // Duplicate the string "/bin/sh" and store the pointer in shellPath
+        shellPath = strdup("/bin/sh");
+
+        // Get the effective group ID and user ID
+        effectiveGroupId = getegid();
+        effectiveUserId = geteuid();
+
+        // Set the real, effective, and saved group IDs to the effective group ID
+        setresgid(effectiveGroupId, effectiveGroupId, effectiveGroupId);
+
+        // Set the real, effective, and saved user IDs to the effective user ID
+        setresuid(effectiveUserId, effectiveUserId, effectiveUserId);
+
+        // Execute the shell "/bin/sh" with shellPath as the argument
+        execv("/bin/sh", &shellPath);
+    } else {
+        // If the integer is not 423, print "No !\n" to the standard error
+        fwrite("No !\n", 1, 5, stderr);
+    }
+
+    // Return 0
+    return 0;
 }
