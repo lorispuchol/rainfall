@@ -1,4 +1,10 @@
-# Install radare2
+# level0
+A binary is present. The program segfaults when executed without arguments and write `No !` on the stderror with any argument.
+
+## Goal
+Find the good argument which will execute a shell with the user `level1`.
+
+## Install radare2
 
 ```bash
 r2 level0
@@ -29,7 +35,7 @@ disassemble function and pass to visual
 
 We see that the program is calling atoi with the first argument of the program and comparing it to 0x1a7 (423 in decimal). If the comparison is true, the program will call execv with "/bin/sh" as argument,.
 
-> __See the strings in the binary__  
+> __See the string "/bin/sh" in the binary__  
 > $ gdb level0  
 > (gdb) b *0x8048ee0  
 > (gdb) run 423  

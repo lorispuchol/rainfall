@@ -88,8 +88,8 @@ No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RU
 
 
 ### References
-- <https://en.wikipedia.org/wiki/.bss>
-- <https://en.wikipedia.org/wiki/Global_Offset_Table>
-- <https://opensource.com/article/21/6/linux-checksec>
-- <https://ctf101.org/binary-exploitation/overview/>
-- <https://book.hacktricks.xyz/binary-exploitation/basic-stack-binary-exploitation-methodology>
+- [wiki .bss](https://en.wikipedia.org/wiki/.bss)
+- [wiki GOT](https://en.wikipedia.org/wiki/Global_Offset_Table)
+- [checksec infos](https://opensource.com/article/21/6/linux-checksec)
+- [ctf 101: binary exploitation](https://ctf101.org/binary-exploitation/overview/)
+- [hacktricks: binary exploitation](https://book.hacktricks.xyz/binary-exploitation/basic-stack-binary-exploitation-methodology)
