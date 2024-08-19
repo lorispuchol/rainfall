@@ -1,4 +1,6 @@
 
+m = 0;
+
 void n(void)
 
 {
