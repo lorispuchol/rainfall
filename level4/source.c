@@ -4,9 +4,9 @@ void n(void)
 {
   char local_20c [520];
   
-  fgets(local_20c,0x200,stdin);
+  fgets(local_20c, 512, stdin);
   p(local_20c);
-  if (m == 0x1025544) {
+  if (m == 0x1025544) { // m is a gloabl variable ; 0x1025544 = 16930116 in decimal
     system("/bin/cat /home/user/level5/.pass");
   }
   return;
