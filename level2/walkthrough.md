@@ -1,4 +1,4 @@
-# level1
+# level2
 
 The binary presents doesn't take any arguments. It reads from `stdin` and prints it back to `stdout`. 
 
@@ -28,7 +28,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 Try repeat the same process than level1 but it doesn't work. it print the return address in the stack. and exit
 
-Indeed there is a stack protector which verify if return is in the `0xb.......` range. 
+Indeed there is a __stack protector__ which verify if return is in the `0xb.......` range. 
 
 ```console
    0x080484ed <+25>:	call   0x80483c0 <gets@plt>
@@ -49,6 +49,10 @@ if ((unaff_retaddr & 0xb0000000) == 0xb0000000) {
 ```
 
 So we can't drop at the start of the buffer (same for libc and environment variables) which are in `0xb.......` addresses.
+
+![alt text](./Ressources/Memory-Layout-of-C-1.webp)
+
+> High address are like `0xffffffff` and low address are like `0x08080000`. environnement variables are also in the high address range.
 
 
 ## Goal

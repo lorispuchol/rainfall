@@ -13,7 +13,9 @@ cat /proc/cpuinfo
 ```
 
 #### Goal
-Find a way to read the `.pass` file with the `levelX` user account of the next level (X = number of the next level). This `.pass` file is located at the home directory of each (level0 excluded) user: `/home/user/levelX/.pass`.
+Find a way to read the `.pass` file of the `levelX` user (X = number of the next level). `.pass` located at the home `/home/user/levelX/.pass`.
+
+Exploit vulnerabilities in the binary of the current level to gain access to the next level. Binary are owned by the next user and have the `s` permission exection (set uid of owner for execution).
 
 ## Display kernel protection informations:
 ```bash

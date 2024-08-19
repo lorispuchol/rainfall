@@ -6,9 +6,27 @@ The binary presents doesn't take any arguments. It reads from `stdin` and do not
 ## Step 1
 Decompile the binary with `Ghidra` gives the following code: [source.c](https://github.com/lorispuchol/rainfall/blob/main/level1/source.c) 
 
-> `run` pops a shell but it is never called
+`run` pops a shell but it is never called
+
+`gets` is used to read the input. `gets` is vulnerable to buffer overflow.
+
+```console
+NAME
+       gets - get a string from standard input (DEPRECATED)
+
+SYNOPSIS
+       #include <stdio.h>
+
+       char *gets(char *s);
+
+DESCRIPTION
+       Never use this function.
+
+       gets()  reads  a  line  from stdin into the buffer pointed to by s until either a terminating newline or EOF, which it replaces with a null byte ('\0').  No check for buffer overrun is performed (see BUGS below).
+```
 
 ## Goal  
+
 
 
 Overflow the buffer to overwrite the __return address__ of the function `main` with the address of the function `run`. It will make the `next instruction pointer (eip)` to point to `run`.
