@@ -114,3 +114,5 @@ https://stackoverflow.com/questions/19124095/return-to-lib-c-buffer-overflow-exe
 
 > - Adresses are found in the main frame  
 > - Dont forget to run the binary with the same environment as in gdb (give the entirer path to the binary and/or unset LINES COLUNMS)
+
+https://stackoverflow.com/questions/17775186/buffer-overflow-works-in-gdb-but-not-without-it

@@ -81,6 +81,7 @@ No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RU
 - `file`: Determines the type of an object file.
 - `hexdump`: Displays the contents of an object file in hexadecimal format.
 - `xxd`: A hexdump utility that can output hexdumps in a variety of formats.
+- `pwntools`: A CTF framework and exploit development library.
 
 
 ### Hints:
