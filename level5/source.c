@@ -11,7 +11,7 @@ void n(void)
 {
   char local_20c [520];
   
-  fgets(local_20c,0x200,stdin);
+  fgets(local_20c, 0x200, stdin) // 0x200 = 512;
   printf(local_20c);
                     /* WARNING: Subroutine does not return */
   exit(1);

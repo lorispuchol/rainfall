@@ -61,13 +61,16 @@ No RELRO        No canary found   NX enabled    No PIE          No RPATH   No RU
   > - Partial RELRO: The GOT is read-only, but the dynamic linker's symbol table is not.
   > - Full RELRO: Both the GOT and the dynamic linker's symbol table are read-only.
 
-  > The GOT is a table of pointers that point to functions or variables in shared libraries. It is used to resolve addresses of functions or variables at runtime.
+  > The GOT is a table of pointers that point to functions or variables in shared libraries. It is used to resolve addresses of functions or variables at runtime. The PLT (Procedure Linkage Table) perfoms the linking between the code and GOT.
+
+
 
 - Canaries helps prevent buffer overflow attacks. They are values placed on the stack that are checked before a function returns to ensure that they have not been modified by a buffer overflow.
 - NX (No eXecute) marks certain areas of memory as non-executable.
 - PIE (Position Independent Executable) means the program can load dependencies at different memory locations each time it's executed, preventing hardcoded addresses (But the offsets between parts of the program remain the same - relative addresses).
 - RPATH and RUNPATH are used to specify the directories in which the dynamic linker should search for shared libraries. (Set to for standard locations)
 
+> See how PIE, ASLR, Relro GOT and PLT works together and how it is exploitable in [this article](https://ir0nstone.gitbook.io/notes/types/stack/aslr/plt_and_got).
 
 ## Tools for Working with ELF Files
 
