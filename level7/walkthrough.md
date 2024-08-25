@@ -51,7 +51,7 @@ fs             0x0	0
 gs             0x33	51
 ```
 
-It overwrite `eax` and `edx`
+It overwrites `eax` and `edx`
 
 ## Step 2
 Go deeper
@@ -93,12 +93,12 @@ strcpy(0x46464646, "ok" <unfinished ...>
 --- SIGSEGV (Segmentation fault) ---
 +++ killed by SIGSEGV +++
 ```
-The first copy using `strcpy` is too long (greater than 8 bytes). Therefore, it overwrites the destination of the second copy.
+The destination of the second copy is overwritten.
 
 ### Solution
-Since the destination of the second copy is modified, We can set the destination to the  `puts`'s location in the GOT.  
+Since the destination of the second `strcpy` can be overwritten, We have to set the destination to the location of `puts` in the __GOT__.  
 
-So we can copy `m`'s address at the new destination.
+And we can change the value at the location of `puts` in the __GOT__ by the address of `m` function. Thanks to the `source` argument of `strcpy`
 
 ## Step 3
 Find the address of `m`
@@ -116,7 +116,7 @@ Non-debugging symbols:
 `m` is at `0x080484f4`
 
 ## Step 4
-Find the address of the __GOT__ where  `puts`'s address is stored.
+Find the location in the __GOT__ where the address of `puts` is stored.
 ```bash
 readelf -r level7
 ```
@@ -124,7 +124,7 @@ readelf -r level7
 08049928  00000607 R_386_JUMP_SLOT   00000000   puts
 ```
 
-`puts` is at `0x08049928` in the GOT.
+Address of `puts` is at `0x08049928` in the __GOT__.
 
 ### Verification
 ```console
