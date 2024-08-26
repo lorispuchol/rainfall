@@ -1,4 +1,9 @@
-# level5
+# level7
+The program has buffer overflow vulnerability.
+- It segaults when `argv[2]` doesn't exist.
+- It segfaults when `argv[1]` is too long.
+
+
 Four sections in the program:
 
 - It copies `argv[1]` and `argv[2]` using `strcpy` into two  allocated memory blocks of 8 bytes each, without checking the size of the input.
@@ -10,7 +15,7 @@ Four sections in the program:
 - A function `m` prints the content of `c` but is never called.
 
 ## Goal
-Overflow the allocated memory to call `m()` instead of `puts()` to print the flag.
+Overflow into the allocated memory to call `m()` instead of `puts()` to print the flag.
 
 ## Step 1
 The program SEGFAULTS when `argv[1]` is too long.
@@ -93,7 +98,7 @@ strcpy(0x46464646, "ok" <unfinished ...>
 --- SIGSEGV (Segmentation fault) ---
 +++ killed by SIGSEGV +++
 ```
-The destination of the second copy is overwritten.
+The destination of the second `strcpy` is overwritten when `argv[1]` is greater than 20 bytes.
 
 ### Solution
 Since the destination of the second `strcpy` can be overwritten, We have to set the destination to the location of `puts` in the __GOT__.  
