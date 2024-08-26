@@ -8,21 +8,23 @@ A global variable `m` is declared and supposed to be equal to zero. `v` function
 __We must change  value of `m` to `64`__
 
 ## Step 1
-After `fgets` is done. printf is used to print the value returned by `fgets`
+After `fgets` is done. `printf()` is used to print the value returned by `fgets`
 
 Yeah !! We can control the first parameter of `printf`. So we can make a __*format string attack*__. See [this video](https://www.youtube.com/watch?v=0WvrSfcdq1I) 
 
 `int printf(const char *format, ...)` is a variadic function
 
-As we can control the first parameter of `printf` we can use a __format string__  like `%x`. It will be search the next parameter in the __Ellipsis__ and print it as hexa.
+As we can control the first parameter of `printf` we can use a __format string__  like `%x`. It will be reach the next parameter in the __Ellipsis__ and print it as hexa.  
 
-Indeed `printf` is called with more parameters than wanted. And we know that parameters are placed on the stack before a function call.
+Here is the breach, there is no more parameter.
 
-> Finally: We have access to random value on the stack. It is leak of the stack
+`printf` is called with more parameters than wanted. And we know that parameters are placed on the stack before a function call.
+
+> Finally: We have access to random value on the stack. It is a leak of the stack
 
 
 ## Step 2
-Try to access to `m` pointer by  insert multiple `%x` in the format string which will print the value of the stack. Successfully we access to `m` pointer as __fifth__ parameter of `printf`
+Try to access to `m` pointer by insert multiple `%x` in the format string which will print the value of the stack. Successfully we don't access to `m` pointer but to the buffer at __fifth__ parameter of `printf`
 
 
 ``` bash
@@ -36,14 +38,11 @@ AAAA 200 b7fd1ac0 b7ff37d0 41414141
 
 ## Step 3
 
-Use the `%n` specifier. it will write the number of characters printed so far into the `int *` given. `m` in our case
+`va_arg` will not access to `m` pointer but buffer pointer. So we must write `m` address in the buffer
+
+Then, use the `%n` specifier. it will write the number of characters printed so far into the `int *` given. `m` in our case
 
 see [stack overflow n specifier](https://stackoverflow.com/questions/3401156/what-is-the-use-of-the-n-format-specifier-in-c)
-
-`va_arg` will not access to `m` pointer but buffer pointer. So we must write `m` pointer in the buffer
-
-``` bash
-
 
 ## Step 4 
 Find address of `m`

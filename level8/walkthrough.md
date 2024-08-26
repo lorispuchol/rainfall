@@ -21,16 +21,16 @@ service
 0x804a008, 0x804a018
 ```
 - `auth` points to `0x804a008`
-    - `0x804a008` contains what is after `auth `, in the input if lenght is <= 30 bytes
+    - `0x804a008` contains what is after `auth ` in the input (if lenght is <= 30 bytes)
 - `service` points to `0x804a018`
-    - `0x804a018` contains what is after `servic` without size check (contains `e` here) 
+    - `0x804a018` contains what is after `servic`, here it contains `e` 
 
 
 ### Solution
 Because `service` is stored after `auth` in memory, we can write many characters in `service` to overwrite `auth[32]`.
 
 ## Step 2
-Make `login` input to verify if auth[32] is not equal to `zero` and run a shell.
+Write `login` in stdin to verify if `auth[32]` is not equal to `zero` and so, run a shell.
 
 ## Exploit
 ```console

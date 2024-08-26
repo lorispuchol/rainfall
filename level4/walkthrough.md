@@ -10,7 +10,7 @@ Same goal : write `0x1025544` to `m` and get the flag
 
 > 0x1025544 = 16930116 in decimal
 
-But this time, we can't write 16930116 of caracters into the buffer because it is protected from overflow by (`fgets` reads 512 chars max).
+But this time, we can't write 16930116 characters into the buffer because it is protected from overflow by `fgets` (here `fgets()` reads 512 chars max).
 
 ## Step 1
 find with which parameter `printf` fall on the `fgets` return address (the buffer address)    

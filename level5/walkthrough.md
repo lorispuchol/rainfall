@@ -1,8 +1,8 @@
 # level5
 - This program has the same vulnerability as the previous two levels: __format string vulnerability__., 
-- A function named `o` runs a shell, but is never called
 - `main()` calls `n()` then returns.
-- `n()` finishes calling `exit()`. it is a subroutine that doen't return. So we can't overwrite the return address of `n` to point to `o`.
+- `n()` finishes calling `exit()`. it is a subroutine that doen't return. So we can't overwrite the return address of `n`
+- A function named `o` runs a shell, but is never called
 
 ## Goal
 Modify the call of `exit()` by the call of `o()`
@@ -16,7 +16,7 @@ Dump of assembler code for function n:
 End of assembler dump.
 ```
 
-It's mean that `exit` is a dependecy of the program (extern), which is bind to the program thanks to the __PLT__ and __GOT__ mechanism (same for libc),   
+It's mean that `exit` is a dependecy of the program (extern). `exit()` is bind to the program thanks to the __PLT__ and __GOT__ mechanism (same for libc)
 > *the purpose is to reduce size of the binary.*  
 
 __GOT__ is a table of addresses where we can find the dependencies addresses.
@@ -44,7 +44,7 @@ $ readelf -r level5 | grep exit
 08049838  00000607 R_386_JUMP_SLOT   00000000   exit
 ```
 
-__GOT__ stores  the __address__ of `exit` at `0x8049838`
+The __GOT__ stores  the __address__ of `exit` at `0x8049838`
 
 ### Notice
 *seen early*
@@ -53,7 +53,7 @@ __GOT__ stores  the __address__ of `exit` at `0x8049838`
 ```  
 > 0x80483d0 is not the address of `exit`, it's the address of the __PLT__ entry of `exit`
 
-> 0x8049838 is not the address of `exit`, it's the entry address of the __GOT__ where the address of `exit` is stored 
+> 0x8049838 is not the address of `exit`, it's the address of the __GOT__ entry where the address of `exit` is stored 
 
 ## Step 3
 Lets try to overwrite the __GOT__ entry of `exit` with the address of `o`
@@ -69,10 +69,10 @@ level5
 (gdb)
 ```
 
-It works, we have a shell with the user `level5` privileges. (gdb run with the same privileges as the user not the SUID bit permissions)
+It works, we have a shell with the user `level5` privileges. (gdb run with the same privileges as the user, not the SUID bit permissions)
 
 
-## step 4
+## Step 4
 
 We have to leaks the memory until we reach the address of `exit()`
 
@@ -94,9 +94,9 @@ Buffer is at the 4th position
 
 
 - Write the __GOT__'s address which store `exit` in the buffer.
-- Write 134513828 characters total == Decimal value for `o()`'s address
+- Write 134513828 characters total. 134513828 is the decimal value for the address `o()`
 - Access to the buffer through the __4th__ specifier
-- Write the total printed characters with `%n` in the pointer of `exit`. this will make the pointer point to `o` modifying  the content of the pointer.
+- Write the total printed characters in the pointer of `exit` with `%n`.
 
 
 

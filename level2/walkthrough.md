@@ -28,7 +28,7 @@ Program received signal SIGSEGV, Segmentation fault.
 
 Try repeat the same process than level1 but it doesn't work. it print the return address in the stack. and exit
 
-Indeed there is a __stack protector__ which verify if return is in the `0xb.......` range. 
+Indeed there is a __stack protector__ which verify if the return of main is in the `0xb.......` range. 
 
 ```console
    0x080484ed <+25>:	call   0x80483c0 <gets@plt>
@@ -52,13 +52,15 @@ So we can't drop at the start of the buffer (same for libc and environment varia
 
 ![alt text](./Ressources/Memory-Layout-of-C-1.webp)
 
-> High address are like `0xffffffff` and low address are like `0x08080000`. environnement variables are also in the high address range.
+> High address are like `0xffffffff` and low address are like `0x08080000`. environnement variables are in the high address range like command-line arguments.
 
 
 ## Goal
-We can see that the buffer is dup with `strdup`. `strdup` malloc a new buffer and copy the string in it.
+We can see that the buffer is dup with `strdup`. `strdup` malloc a new buffer in the heap and copy the source inside.
 
 Goal is to drop in the `strdup` buffer by finding the return address of the `strdup` function.
+
+By doing this, we will drop the `eip` in the heap and not the stack, thus bypass the stack protector.
 
 ```console
 (gdb) disas p

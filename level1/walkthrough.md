@@ -27,8 +27,6 @@ DESCRIPTION
 
 ## Goal  
 
-
-
 Overflow the buffer to overwrite the __return address__ of the function `main` with the address of the function `run`. It will make the `next instruction pointer (eip)` to point to `run`.
 
 ```bash 

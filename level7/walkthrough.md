@@ -8,14 +8,14 @@ Four sections in the program:
 
 - It copies `argv[1]` and `argv[2]` using `strcpy` into two  allocated memory blocks of 8 bytes each, without checking the size of the input.
 
-- The program reads the aimed flag file with `fopen` then `fgets` and store the flag in a global string named `c`.
+- The program reads the aimed flag file with `fopen` and `fgets`, then store the content (the flag) in a global string named `c`.
 
 - At the end, it prints a useless message  with `puts("~~")`
 
 - A function `m` prints the content of `c` but is never called.
 
 ## Goal
-Overflow into the allocated memory to call `m()` instead of `puts()` to print the flag.
+Overflow the allocated memory with `strcpy` to call `m()` instead of `puts()` by changing the address of `puts` by `m` in the __GOT__.
 
 ## Step 1
 The program SEGFAULTS when `argv[1]` is too long.
@@ -101,9 +101,11 @@ strcpy(0x46464646, "ok" <unfinished ...>
 The destination of the second `strcpy` is overwritten when `argv[1]` is greater than 20 bytes.
 
 ### Solution
-Since the destination of the second `strcpy` can be overwritten, We have to set the destination to the location of `puts` in the __GOT__.  
+Since the destination of the second `strcpy` can be overwritten, We have to replace the destination by the location of `puts` in the __GOT__.  
 
-And we can change the value at the location of `puts` in the __GOT__ by the address of `m` function. Thanks to the `source` argument of `strcpy`
+Then, we can change the value at the location of `puts` in the __GOT__ by the address of `m` function. (The PLT will still link the binary call to the `puts` entry in the __GOT__)
+
+> Remember: The GOT is an  address table of the dependencies. 
 
 ## Step 3
 Find the address of `m`
