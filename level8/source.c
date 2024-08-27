@@ -14,7 +14,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
     {
       auth = (char *)malloc(4u);
       *(_DWORD *)auth = 0;
-      if ( strlen(v5) <= 0x1E )
+      if ( strlen(v5) <= 0x1E ) // 30 in decimal
         strcpy(auth, v5);
     }
     if ( !memcmp(s, "reset", 5u) )
@@ -26,6 +26,7 @@ int __cdecl main(int argc, const char **argv, const char **envp)
       // (_DWORD *)auth + 8 = auth[32]because
       // Indeed auth is a pointer to a char (1 byte)
       // Here auth is casted to a pointer to a dword (4 bytes, 32 bits)
+      // So incrementing this pointer by  will go 4 bytes further
       if ( *((_DWORD *)auth + 8) )
         system("/bin/sh");
       else
