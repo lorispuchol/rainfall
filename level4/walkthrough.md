@@ -1,6 +1,6 @@
 # level4
 The code looks like the previous level. But there are three differences:
-- `printf` is called through a function `p` instead of directly
+- `printf` is called through a function `p` instead of beeing called directly
 - The global variable `m` is compared to `0x1025544` instead of `0x40`
 - the if statement cat directly the flag instead of run a shell
 
